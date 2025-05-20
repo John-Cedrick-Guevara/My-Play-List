@@ -65,11 +65,15 @@ class _MyWidgetState extends State<MyWidget> {
 
   @override
   Widget build(BuildContext context) {
+    tasks.sort((a, b) {
+      return a.isDone == b.isDone ? 0 : (a.isDone ? 1 : -1);
+    });
+
     return Scaffold(
       body: Stack(
-        
         children: [
-          Container( // container of background
+          Container(
+            // container of background
             height: double.infinity,
             width: double.infinity,
             decoration: BoxDecoration(
@@ -78,22 +82,25 @@ class _MyWidgetState extends State<MyWidget> {
                 fit: BoxFit.cover,
               ),
             ),
-            child: Padding( // padding for contents
-            
+            child: Padding(
+              // padding for contents
               padding: const EdgeInsets.only(
                 top: 50,
                 bottom: 20,
                 left: 20,
                 right: 20,
               ),
-              child: Column( // contents
+              child: Column(
+                // contents
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Stack(// Progress bar
+                  Stack(
+                    // Progress bar
                     clipBehavior: Clip.none,
                     alignment: Alignment.centerLeft,
                     children: [
-                      SizedBox( // container of progress bar
+                      SizedBox(
+                        // container of progress bar
                         width: 250,
                         height: 40,
                         child: Container(
@@ -105,12 +112,11 @@ class _MyWidgetState extends State<MyWidget> {
                             ),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Align( // the bar that moves
+                          child: Align(
+                            // the bar that moves
                             alignment: Alignment.centerLeft,
                             child: AnimatedContainer(
-                              duration: Duration(
-                                milliseconds: 500,
-                              ), 
+                              duration: Duration(milliseconds: 500),
                               curve: Curves.easeInOut,
                               width:
                                   tasks.isEmpty
@@ -128,25 +134,30 @@ class _MyWidgetState extends State<MyWidget> {
                           ),
                         ),
                       ),
-                      Positioned( // heart icon on the left side
+                      Positioned(
+                        // heart icon on the left side
                         left: -30,
                         height: 100,
                         child: Image.asset("assets/images/heart.png"),
                       ),
                     ],
                   ),
-                  Expanded( // the list of tasks
-                    child: Padding( // padding for task container
+                  Expanded(
+                    // the list of tasks
+                    child: Padding(
+                      // padding for task container
                       padding: const EdgeInsets.all(20.0),
                       child: ListView.builder(
                         itemCount: tasks.length,
                         itemBuilder: (context, index) {
                           final task = tasks[index];
-                          return Padding( // padding for each task
+                          return Padding(
+                            // padding for each task
                             padding: const EdgeInsets.all(3.0),
                             child: Align(
                               alignment: Alignment.center,
-                              child: Container( // container of each task
+                              child: Container(
+                                // container of each task
                                 width: 350,
                                 constraints: BoxConstraints(minHeight: 50),
                                 decoration: BoxDecoration(
@@ -163,7 +174,8 @@ class _MyWidgetState extends State<MyWidget> {
                                       horizontal: 20,
                                       vertical: 10,
                                     ),
-                                    child: Row( // contents of task
+                                    child: Row(
+                                      // contents of task
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment:
@@ -171,7 +183,8 @@ class _MyWidgetState extends State<MyWidget> {
 
                                       children: [
                                         Expanded(
-                                          child: Text( // task text
+                                          child: Text(
+                                            // task text
                                             task.title,
                                             softWrap: true,
 
@@ -187,7 +200,8 @@ class _MyWidgetState extends State<MyWidget> {
                                           ),
                                         ),
 
-                                        GestureDetector( // task button
+                                        GestureDetector(
+                                          // task button
                                           onTap:
                                               () => markAsDone(task.id, index),
                                           child: Container(
@@ -227,47 +241,77 @@ class _MyWidgetState extends State<MyWidget> {
                     ),
                   ),
 
-                  Align( // input field and button
-                    alignment: Alignment.bottomCenter,
-                    child: Column(
-                      children: [
-                        TextField(// text field
-                          controller: _controller,
-                          style: TextStyle(fontFamily: "PressStart2P"),
-                        ),
+                  Column(
+                    children: [
+                      Container(
+                        // for background and design of textfield
+                        width: 400,
+                        height: 50,
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: Color(0xFFF1F2F2),
+                          borderRadius: BorderRadius.circular(10),
 
-                        GestureDetector( // add button
-                          onTap: addTask,
-                          child: Container(
-                            width: 300,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage("assets/images/buttonBg.png"),
-                                fit: BoxFit.fill,
-                              ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromARGB(
+                                255,
+                                81,
+                                81,
+                                81,
+                              ), // Shadow color
+                              spreadRadius: 2, // radius of shadow
+                              blurRadius: 0, // blurryness of the shadow
+                              offset: Offset(4, 4), //positioning
                             ),
-                            child: Center(
-                              child: Text(
-                                "ADD TASK",
-                                style: TextStyle(
-                                  fontFamily: "PressStart2P",
-                                  color: Colors.white,
-                                  fontSize: 10,
-                                ),
+                          ],
+                        ),
+                        child: TextField(
+                          cursorWidth: 15,
+                          // text field
+                          controller: _controller,
+                          decoration: InputDecoration(border: InputBorder.none),
+                          style: TextStyle(
+                            fontFamily: "PressStart2P",
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20), // add spacing
+                      GestureDetector(
+                        // add button
+                        onTap: addTask,
+                        child: Container(
+                          width: 300,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage("assets/images/buttonBg.png"),
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "ADD TASK",
+                              style: TextStyle(
+                                fontFamily: "PressStart2P",
+                                color: Colors.white,
+                                fontSize: 10,
                               ),
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
           ),
 
-          AnimatedPositioned( // mario pop up animation 
+          AnimatedPositioned(
+            // mario pop up animation
             duration: Duration(milliseconds: 600),
             left: 0,
             right: 0,
