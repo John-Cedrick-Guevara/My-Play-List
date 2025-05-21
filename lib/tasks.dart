@@ -12,51 +12,49 @@ class MyWidget extends StatefulWidget {
 
 // defines the task object
 class Tasks {
-  final String title;
-  final int id;
-  bool isDone;
+  final String title; // Nilalaman ng tasks
+  final int id; // id of task
+  bool isDone; // if task is done 
 
   Tasks({required this.title, required this.id, required this.isDone});
 }
 
 class _MyWidgetState extends State<MyWidget> {
-  final TextEditingController _controller = TextEditingController();
-  List<Tasks> tasks = [];
-  final player = AudioPlayer();
+  final TextEditingController _controller = TextEditingController(); // read input
+  List<Tasks> tasks = []; // lalagyan ng mga tasks
+  
   int uniqueId = 0;
-  bool showPopUp = false;
-  double popUpPosition = -1200;
+  bool showPopUp = false; // for mario pop up   
+  double popUpPosition = -1200; // position ni mario asa baba kasi nega
 
   void addTask() {
-    if (_controller.text.isNotEmpty) {
+    if (_controller.text.isNotEmpty) { // pag walang laman di mag add 
       setState(() {
         tasks.add(
-          Tasks(title: _controller.text, id: uniqueId++, isDone: false),
+          Tasks(title: _controller.text, id: uniqueId++, isDone: false), // mga task yung unique id
         );
       });
     }
 
-    _controller.clear();
+    _controller.clear(); // clear input
   }
 
-  void playSound() async {
-    await player.play(AssetSource("assets/sounds/try.wav"));
-  }
 
-  void markAsDone(int id, int index) {
+
+  void markAsDone(int id, int index) { // task is done
     setState(() {
       if (tasks[index].isDone == false) {
         tasks[index].isDone = true;
         showPopUp = true;
-        popUpPosition = 300;
+        popUpPosition = 300; // lalabas na si mario kasi done na
 
-        playSound();
+       
       } else {
-        tasks.removeWhere((task) => task.id == id);
+        tasks.removeWhere((task) => task.id == id); // mawawala na yung task kasi tapos na to at dinilete na
       }
     });
 
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(Duration(seconds: 1), () { // mario delay
       setState(() {
         popUpPosition = -1200;
       });
@@ -65,7 +63,7 @@ class _MyWidgetState extends State<MyWidget> {
 
   @override
   Widget build(BuildContext context) {
-    tasks.sort((a, b) {
+    tasks.sort((a, b) { // uunahin yung mga task na di pa tapos
       return a.isDone == b.isDone ? 0 : (a.isDone ? 1 : -1);
     });
 
@@ -147,7 +145,7 @@ class _MyWidgetState extends State<MyWidget> {
                     child: Padding(
                       // padding for task container
                       padding: const EdgeInsets.all(20.0),
-                      child: ListView.builder(
+                      child: ListView.builder( // para madisplay yung task
                         itemCount: tasks.length,
                         itemBuilder: (context, index) {
                           final task = tasks[index];
@@ -182,11 +180,11 @@ class _MyWidgetState extends State<MyWidget> {
                                           CrossAxisAlignment.center,
 
                                       children: [
-                                        Expanded(
+                                        Expanded( // para magexpand yung container
                                           child: Text(
                                             // task text
                                             task.title,
-                                            softWrap: true,
+                                            softWrap: true, // para mag newline
 
                                             style: TextStyle(
                                               decoration:
